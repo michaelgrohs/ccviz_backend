@@ -28,7 +28,7 @@ from pm4py.objects.log.importer.xes import importer as xes_importer
 
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "https://ccviz-online.vercel.app"}}, supports_credentials=True)
 
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -52,8 +52,10 @@ def reset_cache():
     last_uploaded_data["xes_log"] = None
     last_uploaded_data["alignments"] = None
 
-@app.route('/upload', methods=['POST'])
+@app.route('/upload', methods=['POST', 'OPTIONS'])
 def upload_files():
+    if request.method == 'OPTIONS':
+        return '', 200  # CORS preflight OK
     if 'bpmn' not in request.files or 'xes' not in request.files:
         return jsonify({"error": "Both BPMN and XES files are required"}), 400
 
