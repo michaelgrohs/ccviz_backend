@@ -107,6 +107,10 @@ def get_cached_xes_log():
         last_uploaded_data['xes_log'] = xes_importer.apply(last_uploaded_data['xes_path'])
     return last_uploaded_data['xes_log']
 
+@app.route("/ping")
+def ping():
+    return "OK", 200
+
 @app.route('/api/save-timing', methods=['POST'])
 def save_timing():
     data = request.get_json()
