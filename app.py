@@ -27,9 +27,13 @@ from process_mining.activity_deviations import get_activity_deviations
 from pm4py.objects.log.importer.xes import importer as xes_importer
 
 
-app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "https://ccviz-online.vercel.app"}}, supports_credentials=True)
 
+app = Flask(__name__)
+CORS(
+    app,
+    resources={r"/*": {"origins": "https://ccviz-frontend.vercel.app"}},
+    supports_credentials=True
+)
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
@@ -107,7 +111,7 @@ def get_cached_xes_log():
         last_uploaded_data['xes_log'] = xes_importer.apply(last_uploaded_data['xes_path'])
     return last_uploaded_data['xes_log']
 
-@app.route("/ping")
+@app.route("/ping", methods=["GET", "OPTIONS"])
 def ping():
     return "OK", 200
 
